@@ -1,6 +1,6 @@
 # Taktera.Mail — Project Documentation
 
-This directory contains the approved project planning package used by ChatGPT, Codex and maintainers.
+This directory contains the project planning baseline for ChatGPT, Codex and maintainers. It is a planning reference, not approval of proposed ADRs or authorization to implement all stages.
 
 Read in this order:
 
@@ -8,11 +8,11 @@ Read in this order:
 2. `ROADMAP.md` — 13-stage delivery plan to v1.0.
 3. `SPECIFICATION.md` — technical specification.
 4. `API_CONTRACTS.md` — application/API contracts.
-5. `DATABASE_DESIGN.md` and `DATABASE_SCHEMA.sql` — local data model proposal.
+5. `DATABASE_DESIGN.md` — local data model proposal (executable SQL schema has not yet been imported).
 6. `INTERFACE_SPEC.md` and `DESIGN_SYSTEM.md` — UX/UI requirements.
 7. `ADR_DECISIONS.md` — architecture decisions that still require approval.
 8. `CODEX_PHASE_PROMPTS.md` — sequential Codex task prompts.
-9. `ISSUES_FULL.md` — issue backlog and acceptance criteria.
+9. GitHub Issues `TM-00-*` through `TM-12-*` — backlog and acceptance criteria (the consolidated `ISSUES_FULL.md` has not yet been imported).
 10. `RELEASE_ACCEPTANCE.md` — release gate checklist.
 
 ## Governance
