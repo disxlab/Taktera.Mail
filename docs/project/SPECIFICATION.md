@@ -76,4 +76,4 @@ These are targets, not claims about current implementation.
 
 M00 baseline → M01 Domain/Application → M02 UI → M03 SQLite/Search → M04 MIME → M05 IMAP → M06 OAuth/accounts → M07 Compose/SMTP → M08 feature complete → M09 hardening → M10 platform integration → M11 alpha/beta/RC → M12 production.
 
-See `ISSUES_FULL.md`, `API_CONTRACTS.md`, `DATABASE_DESIGN.md`, `DATABASE_SCHEMA.sql`, `INTERFACE_SPEC.md`, `DESIGN_SYSTEM.md`, and `CODEX_PHASE_PROMPTS.md` for detailed work packages.
+See GitHub Issues `TM-00-*` through `TM-12-*`, `API_CONTRACTS.md`, `DATABASE_DESIGN.md`, `INTERFACE_SPEC.md`, `DESIGN_SYSTEM.md`, and `CODEX_PHASE_PROMPTS.md`. The consolidated issues document and executable SQL schema remain to be imported and reviewed before implementation.
