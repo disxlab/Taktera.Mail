@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Taktera.Mail.Desktop.ViewModels"
+        xmlns:models="using:Taktera.Mail.Desktop.Models"
+        x:Class="Taktera.Mail.Desktop.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Taktera.Mail" Width="1220" Height="780" MinWidth="850" MinHeight="520"
+        Background="#F7F9FC">
+  <Grid RowDefinitions="Auto,*">
+    <Border Background="White" BorderBrush="#E8EDF3" BorderThickness="0,0,0,1" Padding="24,12">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+        <TextBlock Text="✉  Taktera.Mail" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="#17253C"/>
+        <TextBox Grid.Column="1" Watermark="Поиск по почте" Name="SearchBox" MinWidth="120" MaxWidth="370" Margin="24,0,0,0" HorizontalAlignment="Stretch"/>
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="0,4,0,0" Text="Демонстрационная версия · 0.1.0" Foreground="#6E7B8C" VerticalAlignment="Center"/>
+      </Grid>
+    </Border>
+    <Grid Grid.Row="1" ColumnDefinitions="200,2*,3*">
+      <Border Background="#EDF3FA" Padding="16,22">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+          <StackPanel Spacing="10">
+            <Button Content="＋  Новое письмо" Background="#2563EB" Foreground="White" HorizontalAlignment="Stretch" Padding="14,11"/>
+            <TextBlock Text="ПОЧТА" FontWeight="SemiBold" Foreground="#64748B" Margin="8,20,0,4" FontSize="11"/>
+            <Border Background="#D9E7FB" CornerRadius="8" Padding="12">
+              <TextBlock Text="▣  Входящие · 3" FontWeight="SemiBold"/>
+            </Border>
+            <TextBlock Text="➤  Отправленные" Margin="12,10"/>
+            <TextBlock Text="▤  Черновики" Margin="12,10"/>
+            <TextBlock Text="▥  Архив" Margin="12,10"/>
+            <TextBlock Text="◷  Спам" Margin="12,10"/>
+            <TextBlock Text="АККАУНТЫ" FontWeight="SemiBold" Foreground="#64748B" Margin="8,25,0,5" FontSize="11"/>
+            <TextBlock Text="＋  Добавить аккаунт" Margin="12,8" Foreground="#2563EB"/>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+      <Border Grid.Column="1" Background="White" BorderBrush="#E8EDF3" BorderThickness="0,0,1,0">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Margin="18,20,18,12" Spacing="6">
+            <TextBlock Text="Входящие" FontSize="24" FontWeight="SemiBold"/>
+            <TextBlock Text="Все письма" Foreground="#64748B" FontSize="12"/>
+          </StackPanel>
+          <ListBox ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+              </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="models:MailItem">
+                <StackPanel Spacing="5" Margin="12,10">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding Sender}" TextTrimming="CharacterEllipsis" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="{Binding Time}" FontSize="11" Foreground="#64748B"/>
+                  </Grid>
+                  <TextBlock Text="{Binding Subject}" TextTrimming="CharacterEllipsis" FontWeight="Medium"/>
+                  <TextBlock Text="{Binding Preview}" Foreground="#64748B" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+      <Border Grid.Column="2" Padding="20,20" Background="White">
+        <ScrollViewer Name="MessageScroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+          <StackPanel Spacing="18">
+            <TextBlock Text="{Binding SelectedMessage.Subject, FallbackValue=Выберите письмо}" TextWrapping="Wrap" FontSize="25" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding SelectedMessage.Sender}" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="#334155"/>
+            <Border Height="1" Background="#E8EDF3"/>
+            <TextBlock Text="{Binding SelectedMessage.Body}" FontSize="14" TextWrapping="Wrap" LineHeight="24"/>
+            <WrapPanel Orientation="Horizontal" Margin="0,24,0,0">
+              <Button Content="Ответить" Padding="18,10" Margin="0,0,10,10"/>
+              <Button Content="Переслать" Padding="18,10" Margin="0,0,0,10"/>
+            </WrapPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>
