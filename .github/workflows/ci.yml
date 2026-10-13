@@ -1,0 +1,43 @@
+name: Engineering baseline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+      - '!main'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseline-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Restore and audit all dependencies
+        run: dotnet restore Taktera.Mail.slnx
+      - name: Release build
+        run: dotnet build Taktera.Mail.slnx --configuration Release --no-restore
+      - name: Offline tests (headless layout is not native UI validation)
+        run: dotnet test Taktera.Mail.slnx --configuration Release --no-build --no-restore
+      - name: NuGet vulnerability report
+        if: runner.os == 'Windows'
+        run: dotnet list Taktera.Mail.slnx package --include-transitive --vulnerable
