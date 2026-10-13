@@ -21,7 +21,7 @@
             <Button Content="＋  Новое письмо" Background="#2563EB" Foreground="White" HorizontalAlignment="Stretch" Padding="14,11"/>
             <TextBlock Text="ПОЧТА" FontWeight="SemiBold" Foreground="#64748B" Margin="8,20,0,4" FontSize="11"/>
             <Border Background="#D9E7FB" CornerRadius="8" Padding="12">
-              <TextBlock Text="▣  Входящие · 3" FontWeight="SemiBold"/>
+              <TextBlock Name="InboxCount" Text="{Binding Messages.Count, StringFormat='▣  Входящие · {0}'}" FontWeight="SemiBold"/>
             </Border>
             <TextBlock Text="➤  Отправленные" Margin="12,10"/>
             <TextBlock Text="▤  Черновики" Margin="12,10"/>
@@ -38,7 +38,9 @@
             <TextBlock Text="Входящие" FontSize="24" FontWeight="SemiBold"/>
             <TextBlock Text="Все письма" Foreground="#64748B" FontSize="12"/>
           </StackPanel>
-          <ListBox ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent">
+          <Grid>
+          <TextBlock Name="EmptyInbox" Text="В этой папке пока нет писем" IsVisible="{Binding IsInboxEmpty}" Margin="18,12" TextWrapping="Wrap" Foreground="#64748B"/>
+          <ListBox IsVisible="{Binding !IsInboxEmpty}" ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent">
             <ListBox.Styles>
               <Style Selector="ListBoxItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -57,12 +59,15 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
+          </Grid>
         </DockPanel>
       </Border>
       <Border Grid.Column="2" Padding="20,20" Background="White">
-        <ScrollViewer Name="MessageScroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid>
+        <TextBlock Name="EmptySelection" Text="Выберите письмо для чтения" IsVisible="{Binding !HasSelectedMessage}" TextWrapping="Wrap" FontSize="25" Foreground="#64748B"/>
+        <ScrollViewer Name="MessageScroll" IsVisible="{Binding HasSelectedMessage}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
           <StackPanel Spacing="18">
-            <TextBlock Text="{Binding SelectedMessage.Subject, FallbackValue=Выберите письмо}" TextWrapping="Wrap" FontSize="25" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding SelectedMessage.Subject}" TextWrapping="Wrap" FontSize="25" FontWeight="SemiBold"/>
             <TextBlock Text="{Binding SelectedMessage.Sender}" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="#334155"/>
             <Border Height="1" Background="#E8EDF3"/>
             <TextBlock Text="{Binding SelectedMessage.Body}" FontSize="14" TextWrapping="Wrap" LineHeight="24"/>
@@ -72,6 +77,7 @@
             </WrapPanel>
           </StackPanel>
         </ScrollViewer>
+        </Grid>
       </Border>
     </Grid>
   </Grid>

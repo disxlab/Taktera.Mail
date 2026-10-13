@@ -21,6 +21,71 @@ public static class TestAppBuilder
 
 public sealed class LayoutTests
 {
+    [AvaloniaTheory]
+    [InlineData(true, 850, 520)]
+    [InlineData(false, 850, 520)]
+    [InlineData(true, 1220, 780)]
+    [InlineData(false, 1220, 780)]
+    public void EmptyStatesHideReadingActionsAndRecover(bool clearInbox, int width, int height)
+    {
+        var vm = new MainWindowViewModel();
+        var original = vm.Messages[0];
+        var window = new MainWindow { Width = width, Height = height, DataContext = vm };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            if (clearInbox)
+                vm.Messages.Clear();
+            else
+                vm.SelectedMessage = null;
+
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Assert.Null(vm.SelectedMessage);
+            var emptyInbox = window.FindControl<TextBlock>("EmptyInbox")!;
+            var emptySelection = window.FindControl<TextBlock>("EmptySelection")!;
+            var reader = window.FindControl<ScrollViewer>("MessageScroll")!;
+            Assert.Equal(clearInbox, emptyInbox.IsVisible);
+            Assert.True(emptySelection.IsEffectivelyVisible);
+            AssertInsideWindow(emptySelection, window);
+            if (clearInbox)
+                AssertInsideWindow(emptyInbox, window);
+            Assert.False(reader.IsEffectivelyVisible);
+            Assert.DoesNotContain(reader.GetVisualDescendants().OfType<Button>(), b => b.IsEffectivelyVisible);
+            Assert.Equal(clearInbox ? "▣  Входящие · 0" : "▣  Входящие · 3",
+                window.FindControl<TextBlock>("InboxCount")!.Text);
+
+            if (clearInbox)
+                vm.Messages.Add(original);
+            var list = Assert.Single(window.GetVisualDescendants().OfType<ListBox>());
+            list.SelectedItem = original;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Assert.Same(original, vm.SelectedMessage);
+            Assert.False(emptyInbox.IsVisible);
+            Assert.False(emptySelection.IsVisible);
+            Assert.True(reader.IsEffectivelyVisible);
+            Assert.Contains(reader.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == original.Body);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [Fact]
+    public void RemovingSelectedMessageBeforeOpeningWindowClearsSelection()
+    {
+        var vm = new MainWindowViewModel();
+        vm.Messages.Remove(vm.SelectedMessage!);
+        Assert.Null(vm.SelectedMessage);
+        Assert.False(vm.HasSelectedMessage);
+        Assert.False(vm.IsInboxEmpty);
+        vm.Messages.Clear();
+        Assert.True(vm.IsInboxEmpty);
+    }
+
     [AvaloniaFact]
     public void SelectingSyntheticMessageUpdatesReadingPane()
     {
@@ -57,10 +122,11 @@ public sealed class LayoutTests
     public void LongMessageScrollsAndControlsStayInsideWindow(int width, int height)
     {
         var vm = new MainWindowViewModel();
-        vm.SelectedMessage = new MailItem(new string('S', 300), new string('T', 300), "Preview", "10:24",
+        var longMessage = new MailItem(new string('S', 300), new string('T', 300), "Preview", "10:24",
             string.Join("\n", Enumerable.Repeat(new string('B', 200), 100)));
         vm.Messages.Clear();
-        vm.Messages.Add(vm.SelectedMessage);
+        vm.Messages.Add(longMessage);
+        vm.SelectedMessage = longMessage;
         var window = new MainWindow { Width = width, Height = height, DataContext = vm };
         try
         {
