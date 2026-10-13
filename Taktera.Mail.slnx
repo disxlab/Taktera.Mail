@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Taktera.Mail.Domain/Taktera.Mail.Domain.csproj" />
+    <Project Path="src/Taktera.Mail.Application/Taktera.Mail.Application.csproj" />
+    <Project Path="src/Taktera.Mail.Infrastructure/Taktera.Mail.Infrastructure.csproj" />
+    <Project Path="src/Taktera.Mail.Desktop/Taktera.Mail.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Taktera.Mail.Domain.Tests/Taktera.Mail.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
